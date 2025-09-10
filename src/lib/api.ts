@@ -70,3 +70,25 @@ export async function getProfile() {
 
   return res.json();
 }
+
+export async function getCategories() {
+  const res = await fetch(`${API_URL}/categories`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    cache: "no-store", // supaya selalu fresh
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch categories");
+  }
+
+  return res.json();
+}
+
+export async function fetchArticleById(id: string) {
+  const res = await fetch(`${API_URL}/articles/${id}`, { cache: "no-store" });
+  if (!res.ok) throw new Error("Failed to fetch article");
+  return res.json();
+}
