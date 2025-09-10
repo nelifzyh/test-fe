@@ -6,11 +6,13 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
+import { registerUser } from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 const registerSchema = z.object({
     username: z.string().min(3, "Username minimal 3 karakter"),
     password: z.string().min(6, "Password minimal 6 karakter"),
-    role: z.enum(["user", "admin"]).refine((val) => val !== undefined, {
+    role: z.enum(["user", "admin"]).refine((val) => !!val, {
         message: "Role harus dipilih",
     }),
 });
@@ -19,6 +21,9 @@ type RegisterForm = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
+    const router = useRouter();
 
     const {
         register,
@@ -28,9 +33,30 @@ export default function RegisterPage() {
         resolver: zodResolver(registerSchema),
     });
 
-    const onSubmit = (data: RegisterForm) => {
-        console.log("Register Data:", data);
-        // TODO: fetch ke API register
+    const onSubmit = async (data: RegisterForm) => {
+        setLoading(true);
+        setErrorMsg("");
+
+        try {
+            const response = await registerUser(
+                data.username,
+                data.password,
+                data.role
+            );
+
+            console.log("Register Success:", response);
+
+            // ✅ kalau berhasil -> redirect ke login
+            router.push("/login");
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                setErrorMsg(error.message);
+            } else {
+                setErrorMsg("Register gagal");
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -38,13 +64,7 @@ export default function RegisterPage() {
             <div className="w-full max-w-md md:bg-white md:rounded-2xl md:shadow p-6 md:p-8">
                 {/* Logo */}
                 <div className="flex justify-center mb-6 mt-4">
-                    <Image
-                        src="/logo.svg"
-                        alt="Logo"
-                        width={120}
-                        height={40}
-                        priority
-                    />
+                    <Image src="/logo.svg" alt="Logo" width={120} height={40} priority />
                 </div>
 
                 {/* Form */}
@@ -109,12 +129,16 @@ export default function RegisterPage() {
                         )}
                     </div>
 
+                    {/* Error Message */}
+                    {errorMsg && <p className="text-red-500 text-sm">{errorMsg}</p>}
+
                     {/* Submit */}
                     <button
                         type="submit"
-                        className="w-full bg-blue-600 text-white rounded-md py-2 hover:bg-blue-700 transition"
+                        disabled={loading}
+                        className="w-full bg-blue-600 text-white rounded-md py-2 hover:bg-blue-700 transition disabled:opacity-50"
                     >
-                        Register
+                        {loading ? "Loading..." : "Register"}
                     </button>
                 </form>
 
