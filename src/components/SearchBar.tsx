@@ -16,7 +16,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
     };
 
     return (
-        <div className="relative flex items-center border rounded-md overflow-hidden w-64 bg-white">
+        <div className="relative flex items-center border rounded-md overflow-hidden bg-white">
             {/* Search Icon */}
             <Image
                 src="/search.svg"

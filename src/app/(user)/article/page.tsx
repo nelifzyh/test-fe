@@ -12,19 +12,25 @@ export default function ArticlePage() {
     const [articles, setArticles] = useState<Article[]>([]);
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
+    const [category, setCategory] = useState<string>("");
+    const [search, setSearch] = useState<string>("");
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         async function fetchData() {
             try {
-                const res = await getArticles(page, 6);
+                setLoading(true);
+                const res = await getArticles(page, 6, category, search);
                 setArticles(res.data);
                 setTotal(res.total);
             } catch (err) {
                 console.error(err);
+            } finally {
+                setLoading(false);
             }
         }
         fetchData();
-    }, [page]);
+    }, [page, category, search]);
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -52,17 +58,36 @@ export default function ArticlePage() {
                         Your daily dose of design insights!
                     </p>
                     <div className="flex flex-col sm:flex-row justify-center mt-6">
-                        <div className="bg-blue-500 flex p-2 gap-2 rounded-md">
-                            <CategoryFilter />
-                            <SearchBar />
+                        <div className="bg-blue-500 flex flex-col sm:flex-row p-2 gap-2 rounded-md">
+                            {/* Pass handler ke filter & search */}
+                            <CategoryFilter onChange={(val) => {
+                                setCategory(val);
+                                setPage(1); // reset page
+                            }} />
+                            <SearchBar onSearch={(val) => {
+                                setSearch(val);
+                                setPage(1); // reset page
+                            }} />
                         </div>
                     </div>
                 </div>
             </div>
 
             <div className="max-w-6xl mx-auto p-6">
-                <ArticleList articles={articles} />
-                <Pagination page={page} total={total} onChange={(p) => setPage(p)} />
+                {loading ? (
+                    <div className="flex justify-center items-center py-20">
+                        <div className="w-6 h-6 bg-blue-500 rounded-full animate-bounce"></div>
+                        <div className="w-6 h-6 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.3s] mx-2"></div>
+                        <div className="w-6 h-6 bg-blue-300 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                    </div>
+                ) : articles.length > 0 ? (
+                    <>
+                        <ArticleList articles={articles} />
+                        <Pagination page={page} total={total} onChange={(p) => setPage(p)} />
+                    </>
+                ) : (
+                    <p className="text-center text-gray-500 py-20">No articles found.</p>
+                )}
             </div>
         </div>
     );
