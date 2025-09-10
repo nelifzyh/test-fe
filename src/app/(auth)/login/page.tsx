@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
+import { loginUser } from "@/lib/api";
 
 const loginSchema = z.object({
     username: z.string().min(3, "Username minimal 3 karakter"),
@@ -16,6 +17,8 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
 
     const {
         register,
@@ -25,9 +28,28 @@ export default function LoginPage() {
         resolver: zodResolver(loginSchema),
     });
 
-    const onSubmit = (data: LoginForm) => {
-        console.log("Login Data:", data);
-        // TODO: fetch ke API login
+    const onSubmit = async (data: LoginForm) => {
+        setLoading(true);
+        setErrorMsg("");
+
+        try {
+            const response = await loginUser(data.username, data.password);
+            console.log("Login Success:", response);
+
+            // simpan token di localStorage
+            localStorage.setItem("token", response.token);
+
+            // redirect ke dashboard (contoh)
+            window.location.href = "/article";
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                setErrorMsg(error.message);
+            } else {
+                setErrorMsg("Login gagal");
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -88,12 +110,16 @@ export default function LoginPage() {
                         )}
                     </div>
 
+                    {/* Error message */}
+                    {errorMsg && <p className="text-red-500 text-sm">{errorMsg}</p>}
+
                     {/* Submit */}
                     <button
                         type="submit"
-                        className="w-full bg-blue-600 text-white rounded-md py-2 hover:bg-blue-700 transition"
+                        disabled={loading}
+                        className="w-full bg-blue-600 text-white rounded-md py-2 hover:bg-blue-700 transition disabled:opacity-50"
                     >
-                        Login
+                        {loading ? "Loading..." : "Login"}
                     </button>
                 </form>
 
