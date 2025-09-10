@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import { loginUser } from "@/lib/api";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 const loginSchema = z.object({
     username: z.string().min(3, "Username minimal 3 karakter"),
@@ -16,6 +18,7 @@ const loginSchema = z.object({
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
+    const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
@@ -39,21 +42,21 @@ export default function LoginPage() {
             // simpan token di localStorage
             localStorage.setItem("token", response.token);
 
-            // redirect ke dashboard (contoh)
-            window.location.href = "/article";
+            // redirect ke artikel
+            router.push("/article");
         } catch (error: unknown) {
             if (error instanceof Error) {
                 setErrorMsg(error.message);
             } else {
                 setErrorMsg("Login gagal");
             }
-        } finally {
             setLoading(false);
         }
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-white md:bg-gray-100">
+            {loading && <LoadingOverlay />}
             <div className="w-full max-w-md md:bg-white md:rounded-2xl md:shadow p-6 md:p-8">
                 {/* Logo */}
                 <div className="flex justify-center mb-6 mt-6">
@@ -119,7 +122,7 @@ export default function LoginPage() {
                         disabled={loading}
                         className="w-full bg-blue-600 text-white rounded-md py-2 hover:bg-blue-700 transition disabled:opacity-50"
                     >
-                        {loading ? "Loading..." : "Login"}
+                        Login
                     </button>
                 </form>
 

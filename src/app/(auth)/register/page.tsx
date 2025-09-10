@@ -8,6 +8,7 @@ import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import { registerUser } from "@/lib/api";
 import { useRouter } from "next/navigation";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 const registerSchema = z.object({
     username: z.string().min(3, "Username minimal 3 karakter"),
@@ -45,8 +46,6 @@ export default function RegisterPage() {
             );
 
             console.log("Register Success:", response);
-
-            // ✅ kalau berhasil -> redirect ke login
             router.push("/login");
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -54,13 +53,13 @@ export default function RegisterPage() {
             } else {
                 setErrorMsg("Register gagal");
             }
-        } finally {
             setLoading(false);
         }
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-white md:bg-gray-100">
+            {loading && <LoadingOverlay />}
             <div className="w-full max-w-md md:bg-white md:rounded-2xl md:shadow p-6 md:p-8">
                 {/* Logo */}
                 <div className="flex justify-center mb-6 mt-4">
@@ -138,7 +137,7 @@ export default function RegisterPage() {
                         disabled={loading}
                         className="w-full bg-blue-600 text-white rounded-md py-2 hover:bg-blue-700 transition disabled:opacity-50"
                     >
-                        {loading ? "Loading..." : "Register"}
+                        Register
                     </button>
                 </form>
 
