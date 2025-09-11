@@ -39,11 +39,16 @@ export default function LoginPage() {
             const response = await loginUser(data.username, data.password);
             console.log("Login Success:", response);
 
-            // simpan token di localStorage
+            // simpan token & role di localStorage
             localStorage.setItem("token", response.token);
+            localStorage.setItem("role", response.role);
 
-            // redirect ke artikel
-            router.push("/article");
+            // redirect berdasarkan role
+            if (response.role === "Admin") {
+                router.push("/list-article");
+            } else {
+                router.push("/article");
+            }
         } catch (error: unknown) {
             if (error instanceof Error) {
                 setErrorMsg(error.message);

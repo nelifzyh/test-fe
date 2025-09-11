@@ -43,6 +43,7 @@ export default function Navbar({ variant = "dark" }: NavbarProps) {
 
     const handleLogout = () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("role");
         setIsLogoutModalOpen(false);
         router.push("/login");
     };
