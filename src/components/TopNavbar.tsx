@@ -29,7 +29,7 @@ export default function TopNavbar() {
     }, []);
 
     return (
-        <header className="h-16 bg-white shadow flex items-center justify-between px-6 sticky top-0">
+        <header className="h-16 bg-white shadow flex items-center justify-between px-6 sticky top-0 z-50">
             {/* Left: Page title */}
             <h1 className="text-lg font-semibold text-gray-700">
                 {getPageTitle()}

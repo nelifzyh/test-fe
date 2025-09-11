@@ -41,7 +41,7 @@ export default function Sidebar() {
 
     return (
         <>
-            <aside className="w-64 bg-blue-600 text-white h-screen fixed left-0 top-0 flex flex-col">
+            <aside className="w-56 bg-blue-600 text-white h-screen fixed left-0 top-0 flex flex-col">
                 {/* Logo */}
                 <div className="p-6">
                     <Image
