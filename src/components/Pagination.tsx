@@ -42,7 +42,7 @@ export default function Pagination({
             <button
                 onClick={() => onChange(page - 1)}
                 disabled={page === 1}
-                className="flex items-center gap-1 px-3 py-1 text-sm disabled:opacity-50"
+                className="flex items-center gap-1 px-3 py-1 text-sm text-gray-900 disabled:opacity-50"
             >
                 <ChevronLeft size={16} />
                 Previous
@@ -58,8 +58,8 @@ export default function Pagination({
                     <button
                         key={i}
                         onClick={() => onChange(p as number)}
-                        className={`px-3 py-1 rounded-md text-sm ${page === p
-                                ? "border border-gray-300 font-bold"
+                        className={`px-3 py-1 rounded-md text-sm text-gray-700 ${page === p
+                                ? "border border-gray-500 font-bold"
                                 : "font-semibold"
                             }`}
                     >
@@ -72,7 +72,7 @@ export default function Pagination({
             <button
                 onClick={() => onChange(page + 1)}
                 disabled={page === totalPages}
-                className="flex items-center gap-1 px-3 py-1 text-sm disabled:opacity-50"
+                className="flex items-center gap-1 px-3 py-1 text-sm text-gray-900 disabled:opacity-50"
             >
                 Next
                 <ChevronRight size={16} />

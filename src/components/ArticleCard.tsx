@@ -42,7 +42,7 @@ export default function ArticleCard({
                             day: "numeric",
                         })}
                     </p>
-                    <h3 className="text-base sm:text-lg font-bold mb-1 sm:mb-2">{title}</h3>
+                    <h3 className="text-base sm:text-lg font-bold text-black mb-1 sm:mb-2">{title}</h3>
                     <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 sm:line-clamp-3 mb-2">
                         {content}
                     </p>

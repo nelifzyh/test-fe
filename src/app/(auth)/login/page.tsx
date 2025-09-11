@@ -74,12 +74,12 @@ export default function LoginPage() {
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                     {/* Username */}
                     <div>
-                        <label className="block text-sm font-bold mb-1">Username</label>
+                        <label className="block text-sm font-bold mb-1 text-gray-800">Username</label>
                         <input
                             type="text"
                             placeholder="Input username"
                             {...register("username")}
-                            className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full rounded-md border px-3 py-2 text-sm text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         {errors.username && (
                             <p className="text-red-500 text-xs mt-1">
@@ -90,13 +90,13 @@ export default function LoginPage() {
 
                     {/* Password */}
                     <div>
-                        <label className="block text-sm font-bold mb-1">Password</label>
+                        <label className="block text-sm font-bold mb-1  text-gray-800">Password</label>
                         <div className="relative">
                             <input
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Input password"
                                 {...register("password")}
-                                className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full rounded-md border px-3 py-2 text-sm text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                             <button
                                 type="button"
@@ -127,7 +127,7 @@ export default function LoginPage() {
                 </form>
 
                 {/* Register link */}
-                <p className="text-center text-sm mt-5">
+                <p className="text-center text-sm mt-5 text-gray-700">
                     Don’t have an account?{" "}
                     <a href="/register" className="text-blue-600 hover:underline">
                         Register

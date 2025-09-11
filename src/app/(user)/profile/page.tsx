@@ -38,7 +38,7 @@ export default function ProfilePage() {
         <div className="min-h-screen flex items-center justify-center bg-white px-4">
             <div className="w-full max-w-md p-8 text-center">
                 {/* Title */}
-                <h1 className="text-lg font-semibold mb-6">User Profile</h1>
+                <h1 className="text-lg font-semibold mb-6 text-black">User Profile</h1>
 
                 {/* Default Profile Picture (initial username) */}
                 <div className="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-blue-200 text-blue-700 text-2xl font-bold mb-6">
@@ -46,7 +46,7 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Profile Info */}
-                <div className="space-y-3 text-left">
+                <div className="space-y-3 text-left text-gray-800">
                     <div className="flex justify-between items-center bg-gray-100 px-4 py-2 rounded">
                         <span className="font-medium">Username :</span>
                         <span>{profile.username}</span>

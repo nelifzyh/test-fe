@@ -46,7 +46,7 @@ export default function ArticleDetailPage() {
     return (
         <div className="max-w-5xl mx-auto py-4 px-4 md:px-24 bg-white">
             {/* Judul */}
-            <p className="text-sm text-gray-500 mb-2 text-center">
+            <p className="text-sm text-gray-700 mb-2 text-center">
                 {new Date(article.createdAt).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
@@ -54,7 +54,7 @@ export default function ArticleDetailPage() {
                 })}{" "}
                 • Created by <span className="font-medium">{article.user?.username || "Unknown"}</span>
             </p>
-            <h1 className="text-3xl font-bold mb-6 text-center">{article.title}</h1>
+            <h1 className="text-3xl font-bold mb-6 text-center text-black">{article.title}</h1>
 
             {/* Gambar */}
             <div className="w-full h-[400px] relative mb-6">
@@ -72,7 +72,7 @@ export default function ArticleDetailPage() {
             </div>
 
             {/* Other Articles */}
-            <h2 className="text-2xl font-semibold mt-10 mb-4">Other Articles</h2>
+            <h2 className="text-2xl font-semibold mt-10 mb-4 text-gray-900">Other Articles</h2>
             {otherArticles.length > 0 ? (
                 <ArticleList articles={otherArticles.slice(0, 3)} />
             ) : (
