@@ -92,3 +92,51 @@ export async function fetchArticleById(id: string) {
   if (!res.ok) throw new Error("Failed to fetch article");
   return res.json();
 }
+
+export async function uploadImage(file: File) {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const token = localStorage.getItem("token"); 
+
+  const res = await fetch(`${API_URL}/upload`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`, 
+    },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to upload image");
+  }
+
+  return res.json();
+}
+
+export async function createArticle({
+  title,
+  content,
+  categoryId,
+}: {
+  title: string;
+  content: string;
+  categoryId: string;
+}) {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}/articles`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ title, content, categoryId }),
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to create article");
+  }
+
+  return res.json();
+}

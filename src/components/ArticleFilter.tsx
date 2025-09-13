@@ -2,6 +2,7 @@
 
 import { Category } from "@/types/article";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type Props = {
     categories: Category[];
@@ -14,6 +15,8 @@ export default function ArticleFilter({
     onCategoryChange,
     onSearchChange,
 }: Props) {
+    const router = useRouter();
+
     return (
         <div className="flex gap-2 mb-4">
             {/* Dropdown Category */}
@@ -30,7 +33,7 @@ export default function ArticleFilter({
             </select>
 
             {/* Search */}
-             <div className="relative flex-1">
+            <div className="relative flex-1">
                 <Image
                     src="/search.svg"
                     alt="Search"
@@ -47,7 +50,10 @@ export default function ArticleFilter({
             </div>
 
             {/* Add Article */}
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
+            <button
+                onClick={() => router.push("/articles/create-articles")}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+            >
                 + Add Articles
             </button>
         </div>

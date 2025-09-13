@@ -45,7 +45,7 @@ export default function LoginPage() {
 
             // redirect berdasarkan role
             if (response.role === "Admin") {
-                router.push("/list-article");
+                router.push("/articles");
             } else {
                 router.push("/article");
             }

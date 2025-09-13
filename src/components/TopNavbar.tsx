@@ -10,7 +10,7 @@ export default function TopNavbar() {
 
     // Tentukan judul menu berdasarkan path
     const getPageTitle = () => {
-        if (pathname.startsWith("/list-article")) return "Articles";
+        if (pathname.startsWith("/articles")) return "Articles";
         if (pathname.startsWith("/category")) return "Category";
         return "Dashboard";
     };

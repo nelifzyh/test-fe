@@ -21,7 +21,7 @@ export default function Sidebar() {
     const menuItems = [
         {
             name: "Articles",
-            href: "/list-article",
+            href: "/articles",
             icon: "/articles.svg",
             action: "link",
         },
