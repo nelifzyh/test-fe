@@ -9,6 +9,7 @@ import CategorySelect from "@/components/CategorySelect";
 import ContentEditor from "@/components/ContentEditor";
 import QuillWrapper from "@/components/QuillWrapper";
 import PreviewCreateModal from "@/components/PreviewCreateModal";
+import LoadingOverlay from "@/components/LoadingOverlay"; 
 import { Category } from "@/types/article";
 
 export default function CreateArticlePage() {
@@ -53,7 +54,7 @@ export default function CreateArticlePage() {
                 thumbnailUrl = imgRes.imageUrl;
                 console.log("Thumbnail uploaded:", thumbnailUrl);
             } else {
-                console.log("ℹNo thumbnail selected, skip upload");
+                console.log("ℹ No thumbnail selected, skip upload");
             }
 
             const article = await createArticle({
@@ -75,7 +76,7 @@ export default function CreateArticlePage() {
     };
 
     return (
-        <div className="w-full mx-auto p-6 bg-white rounded-lg shadow">
+        <div className="w-full mx-auto p-6 bg-white rounded-lg shadow relative">
             {/* Header */}
             <div className="flex items-center gap-2 mb-6">
                 <button
@@ -151,6 +152,9 @@ export default function CreateArticlePage() {
                 content={content}
                 thumbnail={thumbnail}
             />
+
+            {/* Loading Overlay */}
+            {loading && <LoadingOverlay />}
         </div>
     );
 }
