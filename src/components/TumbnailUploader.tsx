@@ -1,16 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { ImagePlus } from "lucide-react";
 
 interface Props {
     value: File | null;
     onChange: (file: File | null) => void;
+    initialUrl?: string; // 🔹 tambahin props opsional
 }
 
-export default function ThumbnailUploader({ value, onChange }: Props) {
+export default function ThumbnailUploader({ value, onChange, initialUrl }: Props) {
     const [preview, setPreview] = useState<string | null>(null);
+
+    // atur preview kalau ada file baru atau pakai initialUrl dari API
+    useEffect(() => {
+        if (value) {
+            const url = URL.createObjectURL(value);
+            setPreview(url);
+            return () => URL.revokeObjectURL(url);
+        } else if (initialUrl) {
+            setPreview(initialUrl);
+        } else {
+            setPreview(null);
+        }
+    }, [value, initialUrl]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -22,7 +36,7 @@ export default function ThumbnailUploader({ value, onChange }: Props) {
     return (
         <div>
             <label className="block text-sm font-medium mb-2">Thumbnails</label>
-            {value && preview ? (
+            {preview ? (
                 <div className="w-56 border rounded-lg overflow-hidden">
                     <Image
                         src={preview}

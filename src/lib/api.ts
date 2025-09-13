@@ -88,10 +88,26 @@ export async function getCategories() {
 }
 
 export async function fetchArticleById(id: string) {
-  const res = await fetch(`${API_URL}/articles/${id}`, { cache: "no-store" });
-  if (!res.ok) throw new Error("Failed to fetch article");
-  return res.json();
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}/articles/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    console.error(`❌ Failed to fetch article ${id}:`, errorText);
+    throw new Error("Failed to fetch article");
+  }
+
+  const data = await res.json();
+  console.log("✅ Article fetched:", data);
+  return data;
 }
+
 
 export async function uploadImage(file: File) {
   const formData = new FormData();
@@ -158,5 +174,50 @@ export async function createArticle({
 
   const data = await res.json();
   console.log("✅ Article created:", data);
+  return data;
+}
+
+export async function updateArticle(
+  id: string,
+  {
+    title,
+    content,
+    categoryId,
+    imageUrl,
+  }: {
+    title: string;
+    content: string;
+    categoryId: string;
+    imageUrl?: string;
+  }
+) {
+  const token = localStorage.getItem("token");
+
+  const body = {
+    title,
+    content,
+    categoryId,
+    ...(imageUrl ? { imageUrl } : {}),
+  };
+
+  console.log(`🔼 Updating article ${id} with body:`, body);
+
+  const res = await fetch(`${API_URL}/articles/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    console.error("❌ Failed to update article:", errorText);
+    throw new Error("Failed to update article");
+  }
+
+  const data = await res.json();
+  console.log("✅ Article updated:", data);
   return data;
 }
