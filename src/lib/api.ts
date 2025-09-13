@@ -1,4 +1,5 @@
 import { API_URL } from "./config";
+import type { Category } from "@/types/article";
 
 export async function loginUser(username: string, password: string) {
   const res = await fetch(`${API_URL}/auth/login`, {
@@ -242,4 +243,71 @@ export async function deleteArticle(id: string) {
 
   console.log("✅ Article deleted");
   return true;
+}
+
+export interface CategoryResponse {
+  data: Category[];
+  totalData: number;
+  currentPage: number;
+  totalPages: number;
+}
+
+export async function fetchCategories(page = 1, search = ""): Promise<CategoryResponse> {
+  const res = await fetch(
+    `${API_URL}/categories?page=${page}&search=${encodeURIComponent(search)}`,
+    { cache: "no-store" }
+  );
+  if (!res.ok) throw new Error("Failed to fetch categories");
+  return res.json();
+}
+
+export async function createCategory(name: string): Promise<Category> {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${API_URL}/categories`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ name }),
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to create category");
+  }
+
+  return res.json();
+}
+
+export async function updateCategory(id: string, name: string): Promise<Category> {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${API_URL}/categories/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ name }),
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to update category");
+  }
+
+  return res.json();
+}
+
+// DELETE CATEGORY
+export async function deleteCategory(id: string): Promise<void> {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${API_URL}/categories/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to delete category");
+  }
 }
