@@ -221,3 +221,25 @@ export async function updateArticle(
   console.log("✅ Article updated:", data);
   return data;
 }
+
+export async function deleteArticle(id: string) {
+  const token = localStorage.getItem("token");
+
+  console.log(`🗑️ Deleting article ${id} ...`);
+
+  const res = await fetch(`${API_URL}/articles/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    console.error("❌ Failed to delete article:", errorText);
+    throw new Error("Failed to delete article");
+  }
+
+  console.log("✅ Article deleted");
+  return true;
+}
