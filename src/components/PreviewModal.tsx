@@ -1,53 +1,58 @@
 "use client";
 
 import Image from "next/image";
-import { X } from "lucide-react";
-import { Category } from "@/types/article";
+import { Article } from "@/types/article";
 
-interface Props {
+type Props = {
     show: boolean;
     onClose: () => void;
-    title: string;
-    category: string;
-    categories: Category[];
-    content: string;
-    thumbnail: File | null;
-}
+    article: Article;
+    username: string;
+};
 
-export default function PreviewModal({
-    show,
-    onClose,
-    title,
-    category,
-    categories,
-    content,
-    thumbnail,
-}: Props) {
+export default function PreviewModal({ show, onClose, article, username }: Props) {
     if (!show) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg w-3/4 max-w-2xl p-6 relative">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto">
+            <div className="bg-white rounded-lg w-full max-w-4xl p-6 relative mx-4 my-8">
+                {/* Close button */}
                 <button
                     onClick={onClose}
                     className="absolute top-3 right-3 text-gray-500 hover:text-black"
                 >
-                    <X className="w-5 h-5" />
+                    ✕
                 </button>
-                <h2 className="text-lg font-semibold mb-4">Preview Article</h2>                
-                <h3 className="text-xl font-bold mb-2 text-center">{title || "No Title"}</h3>
-                {thumbnail && (
+
+                {/* Info */}
+                <p className="text-sm text-gray-700 mb-2 text-center">
+                    {new Date(article.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                    })}{" "}
+                    • Created by <span className="font-medium">{username}</span>
+                </p>
+
+                {/* Judul */}
+                <h1 className="text-3xl font-bold mb-6 text-center text-black">
+                    {article.title}
+                </h1>
+
+                {/* Gambar */}
+                <div className="w-full h-[400px] relative mb-6">
                     <Image
-                        src={URL.createObjectURL(thumbnail)}
-                        alt="Preview Thumbnail"
-                        className="w-full h-48 object-cover rounded mb-4"
-                        width={600}
-                        height={240}
+                        src={article.imageUrl || "/background.jpg"}
+                        alt={article.title}
+                        fill
+                        className="object-cover rounded-lg"
                     />
-                )}
+                </div>
+
+                {/* Konten */}
                 <div
-                    className="prose max-w-none"
-                    dangerouslySetInnerHTML={{ __html: content }}
+                    className="prose max-w-none text-gray-700 whitespace-pre-line mb-6 text-left text-justify"
+                    dangerouslySetInnerHTML={{ __html: article.content }}
                 />
             </div>
         </div>

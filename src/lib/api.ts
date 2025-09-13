@@ -97,33 +97,49 @@ export async function uploadImage(file: File) {
   const formData = new FormData();
   formData.append("image", file);
 
-  const token = localStorage.getItem("token"); 
+  const token = localStorage.getItem("token");
+
+  console.log("🔼 Uploading image to /upload ...");
 
   const res = await fetch(`${API_URL}/upload`, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${token}`, 
+      Authorization: `Bearer ${token}`,
     },
     body: formData,
   });
 
   if (!res.ok) {
+    console.error("❌ Failed to upload image");
     throw new Error("Failed to upload image");
   }
 
-  return res.json();
+  const data = await res.json();
+  console.log("✅ Image uploaded:", data);
+  return data; // { imageUrl: "https://..." }
 }
 
 export async function createArticle({
   title,
   content,
   categoryId,
+  imageUrl, // ganti dari thumbnailUrl
 }: {
   title: string;
   content: string;
   categoryId: string;
+  imageUrl?: string; // opsional
 }) {
   const token = localStorage.getItem("token");
+
+  const body = {
+    title,
+    content,
+    categoryId,
+    ...(imageUrl ? { imageUrl } : {}), // backend minta "imageUrl"
+  };
+
+  console.log("🔼 Creating article with body:", body);
 
   const res = await fetch(`${API_URL}/articles`, {
     method: "POST",
@@ -131,12 +147,16 @@ export async function createArticle({
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ title, content, categoryId }),
+    body: JSON.stringify(body),
   });
 
   if (!res.ok) {
+    const errorText = await res.text(); // untuk debug
+    console.error("❌ Failed to create article:", errorText);
     throw new Error("Failed to create article");
   }
 
-  return res.json();
+  const data = await res.json();
+  console.log("✅ Article created:", data);
+  return data;
 }

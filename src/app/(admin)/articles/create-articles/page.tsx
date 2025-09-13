@@ -7,8 +7,8 @@ import { getCategories, uploadImage, createArticle } from "@/lib/api";
 import ThumbnailUploader from "@/components/TumbnailUploader";
 import CategorySelect from "@/components/CategorySelect";
 import ContentEditor from "@/components/ContentEditor";
-import PreviewModal from "@/components/PreviewModal";
 import QuillWrapper from "@/components/QuillWrapper";
+import PreviewCreateModal from "@/components/PreviewCreateModal";
 import { Category } from "@/types/article";
 
 export default function CreateArticlePage() {
@@ -48,22 +48,26 @@ export default function CreateArticlePage() {
 
             // 1. Upload thumbnail jika ada
             if (thumbnail) {
+                console.log("Uploading thumbnail...");
                 const imgRes = await uploadImage(thumbnail);
                 thumbnailUrl = imgRes.imageUrl;
+                console.log("Thumbnail uploaded:", thumbnailUrl);
+            } else {
+                console.log("ℹNo thumbnail selected, skip upload");
             }
 
-            // 2. Create article
             const article = await createArticle({
                 title,
-                content, // langsung isi HTML dari Quill
+                content,
                 categoryId: category,
+                imageUrl: thumbnailUrl || undefined,
             });
 
             console.log("Artikel berhasil dibuat:", article);
             alert("Artikel berhasil dibuat!");
             router.push("/articles");
         } catch (error) {
-            console.error(error);
+            console.error("Error creating article:", error);
             alert("Gagal membuat artikel");
         } finally {
             setLoading(false);
@@ -138,7 +142,7 @@ export default function CreateArticlePage() {
             </form>
 
             {/* Preview Modal */}
-            <PreviewModal
+            <PreviewCreateModal
                 show={showPreview}
                 onClose={() => setShowPreview(false)}
                 title={title}
